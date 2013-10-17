@@ -92,10 +92,10 @@ class Integer {
 	*	getEven(10, null, 2); // 10,6,2, -2 ...
 	*	getEven(10,20); // 10,12,14,16,18,20
 	*	getEven(20,10); // 20,18,16,14,12,10
-	* 	getEven(10,20,2); // 10,14,18
+	*	getEven(10,20,2); // 10,14,18
 	*
 	*	@param int|null $start
-	* 	@param int|null $end
+	*	@param int|null $end
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
@@ -175,10 +175,10 @@ class Integer {
 	*	getUneven(11, null, 2); // 11,7,3, -1 ...
 	*	getUneven(11,21); // 11,13,15,17,19,21
 	*	getUneven(21,11); // 21,19,18,17,15,13,11
-	* 	getUneven(11,21,2); // 11,15,19
+	*	getUneven(11,21,2); // 11,15,19
 	*
 	*	@param int|null $start
-	* 	@param int|null $end
+	*	@param int|null $end
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
@@ -261,7 +261,7 @@ class Integer {
 	*	getRange(10, 3, 3); // 10,7,4
 	*
 	*	@param int|null $start
-	* 	@param int|null $end
+	*	@param int|null $end
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
