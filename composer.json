@@ -1,0 +1,25 @@
+{
+    "name": "ronnieskansing/generators",
+    "description": "Libary of generators.",
+    "keywords": ["even","uneven","primes", "fibo", "generators"],
+    "homepage": "https://github.com/RonnieSkansing/php-generators",
+    "license": "DBAD",
+    "authors": [
+        {
+            "name": "Ronnie Skansing",
+            "email": "rskansing@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"   
+    },
+    "autoload": {
+        "psr-0": {
+            "Generator\\": "src/"
+        }
+    }
+}
