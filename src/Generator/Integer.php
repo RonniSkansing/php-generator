@@ -144,23 +144,29 @@ class Integer {
 			$this->throwExceptionIfUneven($start);
 			$this->throwExceptionIfUneven($end);
 
-			$Generator = function() use ($start, $end, $step) 
+			// decrease
+			if($start >= $end)
 			{
-				if($start >= $end)
+				$Generator = function() use ($start, $end, $step)
 				{
 					for($i = $start; $i >= $end; $i -= $step * 2)
 					{
 						yield $i;
 					}
-				}
-				else
+				};
+			}
+			// increase
+			else
+			{
+				$Generator = function() use ($start, $end, $step)
 				{
 					for($i = $start; $i <= $end; $i += $step * 2)
 					{
 						yield $i;
 					}
-				}
-			};
+				};
+				
+			}
 		}
 
 		return $Generator();
@@ -227,23 +233,28 @@ class Integer {
 			$this->throwExceptionIfEven($start);
 			$this->throwExceptionIfEven($end);
 
-			$Generator = function() use ($start, $end, $step) 
+			// increase
+			if($start >= $end)
 			{
-				if($start >= $end)
+				$Generator = function() use ($start, $end, $step) 
 				{
 					for($i = $start; $i >= $end; $i -= $step * 2)
 					{
 						yield $i;
 					}
-				}
-				else
+				};	
+			}
+			// decrease
+			else 
+			{
+				$Generator = function() use ($start, $end, $step) 
 				{
 					for($i = $start; $i <= $end; $i += $step * 2)
 					{
 						yield $i;
 					}
-				}
-			};
+				};
+			}
 		}
 
 		return $Generator();
@@ -300,25 +311,60 @@ class Integer {
 		// predetermined range
 		else 
 		{
-			$Generator = function() use ($start, $end, $step) 
+			// decrease
+			if($start >= $end)
 			{
-				if($start >= $end)
+				$Generator = function() use ($start, $end, $step) 	
 				{
 					for($i = $start; $i >= $end; $i -= $step)
 					{
 						yield $i;
 					}
-				}
-				else
+				};
+			}
+			else 
+			// increase
+			{
+				$Generator = function() use ($start, $end, $step) 
 				{
 					for($i = $start; $i <= $end; $i += $step)
 					{
 						yield $i;
 					}
-				}
-			};
+				};	
+			}
 		}
 
 		return $Generator();
 	}
+
+/*
+	public function getFibonacci($start = null, $end = null, $step = 1)
+	{
+		// Throws LogicException
+		$this->throwExceptionIfAllNulls( [$start, $end] );
+		$this->throwExceptionIfInvalidStep($step);
+
+		// Throws InvalidArgumentException
+		$this->throwExceptionIfNotNullOrInt( [$start, $end] );
+
+		$Generator = function() use ($start) 
+		{
+			for($i = $start; true; $i = ) 
+			{
+				if($i == 0) 
+					yield $i;
+					++$i;
+				elseif($i == 1) 
+					yield 
+					$i += $i;
+				else 
+					$i += $i - 1;
+					yield $i;
+			}
+		};
+
+		return $Generator();
+	}
+*/
 }
