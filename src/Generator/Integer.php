@@ -338,33 +338,115 @@ class Integer {
 		return $Generator();
 	}
 
-/*
-	public function getFibonacci($start = null, $end = null, $step = 1)
+
+	public function getFibonacci($increasing = true, $end = null, $step = 1)
 	{
-		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$start, $end] );
-		$this->throwExceptionIfInvalidStep($step);
+		if(is_bool($increasing) === false)
+		{
+			throw new \InvalidArgumentException('First argument must be a boolean, given ' . gettype($increasing) . '.');
+		}
 
 		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$start, $end] );
+		$this->throwExceptionIfNotNullOrInt( [$end] );
 
-		$Generator = function() use ($start) 
+		// if infinite sequence... 
+		if( is_null($end) === false )
 		{
-			for($i = $start; true; $i = ) 
+			if($increasing === false && $end >= 0)
 			{
-				if($i == 0) 
-					yield $i;
-					++$i;
-				elseif($i == 1) 
-					yield 
-					$i += $i;
-				else 
-					$i += $i - 1;
-					yield $i;
+				throw new \LogicException('Second argument must be lower then 0 in a infinite increasing sequence.');
 			}
-		};
+			elseif($increasing === true && $end <= 0)
+			{
+				throw new \LogicException('Second argument must be lower then 0 in a infinite decreasing sequence.');
+			}
+		} 
+
+		// Throws LogicException
+		$this->throwExceptionIfInvalidStep($step);
+
+		$fib = 0;
+		// infinite increase
+		if($increasing === true && is_null($end))
+		{
+			$Generator = function() use ($fib, $step)
+			{
+				$x = 0;
+				$y = 1;
+				while(true)
+				{
+					yield $fib;
+					// add up for next iteration and take messure for steps
+					for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
+					{
+						$x = $y;
+						$y = $fib;
+					}
+				}
+			};
+		}
+		// infinite decrease range
+		elseif($increasing === false && is_null($end))
+		{
+			$Generator = function() use ($fib, $step)
+			{
+				$x = 0;
+				$y = -1;
+				while(true)
+				{
+					yield $fib;
+					// add up for next iteration and take messure for steps
+					for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
+					{
+						$x = $y;
+						$y = $fib;
+					}
+				}
+			};
+		}
+		// specific end of sequence 
+		else
+		{
+			// increasing
+			if($increasing === true)
+			{
+				$Generator = function() use ($fib, $end, $step)
+				{
+					$x = 0;
+					$y = 1;
+					while($fib < $end)
+					{
+						yield $fib;
+						// add up for next iteration and take messure for steps
+						for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
+						{
+							$x = $y;
+							$y = $fib;
+						}		
+					}
+				};
+			}
+			// decreasing
+			else
+			{
+				$Generator = function() use ($fib, $end, $step)
+				{
+					$x = 0;
+					$y = -1;
+					while($fib > $end)
+					{
+						yield $fib;
+						// add up for next iteration and take messure for steps
+						for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
+						{
+							$x = $y;
+							$y = $fib;
+						}		
+					}
+				};
+			}
+		}
 
 		return $Generator();
 	}
-*/
 }

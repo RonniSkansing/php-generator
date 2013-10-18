@@ -302,10 +302,180 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	{
 		$Generator = $this->Integer->getRange(21,11, 3);
 		$result = [];
-		foreach($Generator as $int) {
+		foreach($Generator as $int) 
+		{
 			$result[] = $int;
 		}
 		$this->assertEquals($result[0], 21);
 		$this->assertEquals($result[1], 18);
+	}
+
+	/**
+	*	@expectedException InvalidArgumentException
+	*/
+	public function testGetFibonacciThrowsExceptionIfFirstArgNotBool() 
+	{
+		$Generator = $this->Integer->getFibonacci('string');
+	}
+
+	/**
+	*	@expectedException InvalidArgumentException
+	*/
+	public function testGetFibonacciThrowsExceptionIfSecondArgNotNullOrInt()
+	{
+		$Generator = $this->Integer->getFibonacci(true, 'string');	
+	}
+
+	/**
+	*	@expectedException LogicException
+	*/
+	public function testGetFibonacciThrowsExceptionIfFirstArgFalseAndSecondArgIsInt0OrHigher()
+	{
+		$Generator = $this->Integer->getFibonacci(false, 0);
+	}
+
+	/**
+	*	@expectedException LogicException
+	*/
+	public function testGetFibonacciThrowsExceptionIfFirstArgTrueAndSecondArgIsInt0OrBelow()
+	{
+		$Generator = $this->Integer->getFibonacci(true, 0);
+	}
+
+	/**
+	*	@expectedException LogicException
+	*/
+	public function testGetFibonacciThrowsExceptionIfStepBelow1()
+	{
+		$Generator = $this->Integer->getFibonacci(true, null, 0);	
+	}
+
+	public function testGetFibonacciCreatesInfiniteSequenceNoArgs()
+	{
+		$Generator = $this->Integer->getFibonacci();
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib > 21) 
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [0,1,1,2,3,5,8,13,21];
+		$this->assertEquals($fibbo, $result);
+	}
+
+	public function testGetFibonacciCanInfiniteIncreaseInSteps()
+	{
+		$Generator = $this->Integer->getFibonacci(true, null, 2);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib > 21)
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+
+		$fibbo = [0,1,3,8,21];
+		$this->assertEquals($fibbo, $result);
+	}
+
+	public function testGetFibonacciCanInfiniteDecrease()
+	{
+		$Generator = $this->Integer->getFibonacci(false);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib < -25) 
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [0,-1,-1,-2,-3,-5,-8,-13,-21];
+		$this->assertEquals($fibbo, $result);
+	}
+
+	public function testGetFibonacciCanInfiniteDecreaseInSteps()
+	{
+		$Generator = $this->Integer->getFibonacci(false, null, 2);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib < -25)
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [-0,-1,-3,-8,-21];
+		$this->assertEquals($fibbo, $result);	
+	}
+
+	public function testGetFibonacciCanMakeALimitedIncreasingSequence()
+	{
+		$Generator = $this->Integer->getFibonacci(true, 10);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib > 21) 
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [0,1,1,2,3,5,8];
+		$this->assertEquals($fibbo, $result);	
+	}
+
+	public function testGetFibonacciCanMakeALimitedIncreasingSequenceWithStep()
+	{
+		$Generator = $this->Integer->getFibonacci(true, 10, 2);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib > 10) 
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [0,1,3,8];
+		$this->assertEquals($fibbo, $result);	
+	}
+
+	public function testGetFibonacciCanMakeALimitedDelimitedSequence()
+	{
+		$Generator = $this->Integer->getFibonacci(false, -10);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib < -10) 
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [-0,-1,-1,-2,-3,-5,-8];
+		$this->assertEquals($fibbo, $result);	
+	}
+
+	public function testGetFibonacciCanMakeALimitedDelimitedSequenceWithStep()
+	{
+		$Generator = $this->Integer->getFibonacci(false, -10, 2);
+		$result = [];
+		foreach($Generator as $fib)
+		{
+			if($fib < -10) 
+			{
+				break;
+			}
+			$result[] = $fib;
+		}
+		$fibbo = [-0,-1,-3,-8];
+		$this->assertEquals($fibbo, $result);	
 	}
 }
