@@ -122,38 +122,38 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	/**
 	* 	@expectedException InvalidArgumentException
 	*/
-	public function testGetUnevenThrowsExceptionIfArgsIsNotInt()
+	public function testgetOddThrowsExceptionIfArgsIsNotInt()
 	{
-		$Generator = $this->Integer->getUneven('string','string');
+		$Generator = $this->Integer->getOdd('string','string');
 	}
 
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testGetUnevenThrowsExceptionIfStepIsBelow1()
+	public function testgetOddThrowsExceptionIfStepIsBelow1()
 	{
-		$Generator = $this->Integer->getUneven(11,33,0);	
+		$Generator = $this->Integer->getOdd(11,33,0);	
 	}
 
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testGetUnevenThrowsExceptionIfNoArgsIsPassed()
+	public function testgetOddThrowsExceptionIfNoArgsIsPassed()
 	{
-		$Generator = $this->Integer->getUneven();
+		$Generator = $this->Integer->getOdd();
 	}
 
 	/**
 	* 	@expectedException LogicException
 	*/
-	public function testGetUnevenThrowsExceptionIfArgsIsEven()
+	public function testgetOddThrowsExceptionIfArgsIsEven()
 	{
-		$Generator = $this->Integer->getUneven(1,6);
+		$Generator = $this->Integer->getOdd(1,6);
 	}
 
-	public function testGetUnevenCanIncreaseInfinite()
+	public function testgetOddCanIncreaseInfinite()
 	{
-		$Generator = $this->Integer->getUneven(1);
+		$Generator = $this->Integer->getOdd(1);
 		foreach($Generator as $int) 
 			if($int === 33)
 				break;
@@ -161,9 +161,9 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(33, $int);	
 	}
 
-	public function testGetUnevenCanDecreaseInfinite()
+	public function testgetOddCanDecreaseInfinite()
 	{
-		$Generator = $this->Integer->getUneven(null, 11);
+		$Generator = $this->Integer->getOdd(null, 11);
 		foreach($Generator as $int) 
 			if($int === -33)
 				break;
@@ -172,9 +172,9 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	}
 
 
-	public function testGetUnevenCanDecreaseInfiniteInSteps()
+	public function testgetOddCanDecreaseInfiniteInSteps()
 	{
-		$Generator = $this->Integer->getUneven(null, 11, 2);
+		$Generator = $this->Integer->getOdd(null, 11, 2);
 		$result = [];
 		foreach($Generator as $int) 
 		{
@@ -186,30 +186,30 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($result[7], $int);		
 	}
 
-	public function testGetUnevenGeneratesEncrease() 
+	public function testgetOddGeneratesEncrease() 
 	{
-		$Generator = $this->Integer->getUneven(11,21);
+		$Generator = $this->Integer->getOdd(11,21);
 		foreach($Generator as $int) {}
 		$this->assertEquals(21, $int);
 	}
 
-	public function testGetUnevenCanDecrease()
+	public function testgetOddCanDecrease()
 	{
-		$Generator = $this->Integer->getUneven(21,11);
+		$Generator = $this->Integer->getOdd(21,11);
 		foreach($Generator as $int) {}
 		$this->assertEquals(11, $int);	
 	}
 
-	public function testGetUnevenIgnoresIfOutOfBounds()
+	public function testgetOddIgnoresIfOutOfBounds()
 	{
-		$Generator = $this->Integer->getUneven(11,21, 2);
+		$Generator = $this->Integer->getOdd(11,21, 2);
 		foreach($Generator as $int) {}
 		$this->assertEquals(19, $int);
 	}
 
-	public function testGetUnevenCanStep()
+	public function testgetOddCanStep()
 	{
-		$Generator = $this->Integer->getUneven(21,11, 3);
+		$Generator = $this->Integer->getOdd(21,11, 3);
 		$result = [];
 		foreach($Generator as $int) {
 			$result[] = $int;
@@ -478,4 +478,41 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 		$fibbo = [-0,-1,-3,-8];
 		$this->assertEquals($fibbo, $result);	
 	}
+
+	/**
+	*	@expectedException InvalidArgumentException
+	*/
+	public function testGetPrimeThrowsExceptionIfArgsNotIntOrNull() {
+		$Generator = $this->Integer->getPrime('string', 'string');
+	}
+
+	/**
+	*	@expectedException LogicException
+	*/
+	public function testGetPrimeThrowsExceptionIfIndexLowerThen0() {
+		$Generator = $this->Integer->getPrime(-1);
+	}
+
+	/**
+	*	@expectedException LogicException
+	*/
+	public function testGetPrimeThrowsExceptionIfIndexHigherOrEqualThenEnd()
+	{
+		$Generator = $this->Integer->getPrime(10,1);
+	}
+
+	public function testGetPrimeNextPrimeIs2IfLowerThen2()
+	{
+		$Generator = $this->Integer->getPrime(0,10);
+		$this->assertEquals(2, $Generator->current());
+	}
+
+	public function testGetPrimeHighstPrimeNarrows()
+	{
+		$Generator = $this->Integer->getPrime(50, 100);
+		foreach($Generator as $prime){}
+		$this->assertEquals(97, $Generator->current());
+	}
+
+
 }

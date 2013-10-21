@@ -23,12 +23,12 @@ class Integer {
 
 
 	/**
-	*	Throws Exception if uneven int.
+	*	Throws Exception if odd int.
 	*
 	*	@param int $int
 	*	@throws LogicException
 	*/
-	protected function throwExceptionIfUneven($int)
+	protected function throwExceptionIfodd($int)
 	{
 		if($int % 2 !== 0)		
 		{
@@ -45,9 +45,9 @@ class Integer {
 	*/
 	protected function throwExceptionIfEven($int)
 	{
-		if($int % 2 !== 1)		
+		if($int % 2 !== 1)
 		{
-			throw new \LogicException('Not a uneven number.');
+			throw new \LogicException('Not a odd number.');
 		}
 	}
 
@@ -94,46 +94,46 @@ class Integer {
 	*	getEven(20,10); // 20,18,16,14,12,10
 	*	getEven(10,20,2); // 10,14,18
 	*
-	*	@param int|null $start
-	*	@param int|null $end
+	*	@param int|null $index
+	*	@param int|null $limit
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
 	*/
-	public function getEven( $start = null, $end = null, $step = 1 )
+	public function getEven( $index = null, $limit = null, $step = 1 )
 	{
 		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$start, $end] );
+		$this->throwExceptionIfAllNulls( [$index, $limit] );
 		$this->throwExceptionIfInvalidStep($step);
 
 		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$start, $end] );
+		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
 
 		// infinite increase range
-		if(is_int($start) && is_null($end)) 
+		if(is_int($index) && is_null($limit))
 		{
 			// throw LogicException
-			$this->throwExceptionIfUneven($start);
+			$this->throwExceptionIfodd($index);
 
-			$Generator = function() use ($start, $step) 
+			$Generator = function() use ($index, $step)
 			{
-				for($i = $start; true; $i += $step * 2)
+				for($i = $index; true; $i += $step * 2)
 				{
 					yield $i;
 				}
 			};
 		}
 		// infinite decrease range
-		elseif(is_int($end) && is_null($start)) 
+		elseif(is_int($limit) && is_null($index))
 		{
 			// throws LogicException
-			$this->throwExceptionIfUneven($end);
+			$this->throwExceptionIfodd($limit);
 
-			$Generator =  function() use ($end, $step)
+			$Generator =  function() use ($limit, $step)
 			{
-				for($i = $end; true; $i -= $step * 2)
+				for($i = $limit; true; $i -= $step * 2)
 				{
-					yield $i;		
+					yield $i;
 				}
 			};
 		}
@@ -141,15 +141,15 @@ class Integer {
 		else 
 		{
 			// throws LogicException
-			$this->throwExceptionIfUneven($start);
-			$this->throwExceptionIfUneven($end);
+			$this->throwExceptionIfodd($index);
+			$this->throwExceptionIfodd($limit);
 
 			// decrease
-			if($start >= $end)
+			if($index >= $limit)
 			{
-				$Generator = function() use ($start, $end, $step)
+				$Generator = function() use ($index, $limit, $step)
 				{
-					for($i = $start; $i >= $end; $i -= $step * 2)
+					for($i = $index; $i >= $limit; $i -= $step * 2)
 					{
 						yield $i;
 					}
@@ -158,14 +158,13 @@ class Integer {
 			// increase
 			else
 			{
-				$Generator = function() use ($start, $end, $step)
+				$Generator = function() use ($index, $limit, $step)
 				{
-					for($i = $start; $i <= $end; $i += $step * 2)
+					for($i = $index; $i <= $limit; $i += $step * 2)
 					{
 						yield $i;
 					}
 				};
-				
 			}
 		}
 
@@ -174,55 +173,55 @@ class Integer {
 
 
 	/**
-	*	Returns a Generator with a uneven range.
+	*	Returns a Generator with a odd range.
 	*
-	*	getUneven(11); // 11,13,15,17 ...
-	*	getUneven(null, 11); // 11,9,7,5,3 ...
-	*	getUneven(11, null, 2); // 11,7,3, -1 ...
-	*	getUneven(11,21); // 11,13,15,17,19,21
-	*	getUneven(21,11); // 21,19,18,17,15,13,11
-	*	getUneven(11,21,2); // 11,15,19
+	*	getOdd(11); // 11,13,15,17 ...
+	*	getOdd(null, 11); // 11,9,7,5,3 ...
+	*	getOdd(11, null, 2); // 11,7,3, -1 ...
+	*	getOdd(11,21); // 11,13,15,17,19,21
+	*	getOdd(21,11); // 21,19,18,17,15,13,11
+	*	getOdd(11,21,2); // 11,15,19
 	*
-	*	@param int|null $start
-	*	@param int|null $end
+	*	@param int|null $index
+	*	@param int|null $limit
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
 	*/
-	public function getUneven( $start = null, $end = null, $step = 1 )
+	public function getOdd( $index = null, $limit = null, $step = 1 )
 	{
 		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$start, $end] );
+		$this->throwExceptionIfAllNulls( [$index, $limit] );
 		$this->throwExceptionIfInvalidStep($step);
 
 		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$start, $end] );
+		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
 
 		// infinite increase range
-		if(is_int($start) && is_null($end)) 
+		if(is_int($index) && is_null($limit))
 		{
 			// throw LogicException
-			$this->throwExceptionIfEven($start);
+			$this->throwExceptionIfEven($index);
 
-			$Generator = function() use ($start, $step) 
+			$Generator = function() use ($index, $step)
 			{
-				for($i = $start; true; $i += $step * 2)
+				for($i = $index; true; $i += $step * 2)
 				{
 					yield $i;
 				}
 			};
 		}
 		// infinite decrease range
-		elseif(is_int($end) && is_null($start)) 
+		elseif(is_int($limit) && is_null($index)) 
 		{
 			// throws LogicException
-			$this->throwExceptionIfEven($end);
+			$this->throwExceptionIfEven($limit);
 
-			$Generator =  function() use ($end, $step)
+			$Generator =  function() use ($limit, $step)
 			{
-				for($i = $end; true; $i -= $step * 2)
+				for($i = $limit; true; $i -= $step * 2)
 				{
-					yield $i;		
+					yield $i;
 				}
 			};
 		}
@@ -230,26 +229,26 @@ class Integer {
 		else 
 		{
 			// throws LogicException
-			$this->throwExceptionIfEven($start);
-			$this->throwExceptionIfEven($end);
+			$this->throwExceptionIfEven($index);
+			$this->throwExceptionIfEven($limit);
 
 			// increase
-			if($start >= $end)
+			if($index >= $limit)
 			{
-				$Generator = function() use ($start, $end, $step) 
+				$Generator = function() use ($index, $limit, $step)
 				{
-					for($i = $start; $i >= $end; $i -= $step * 2)
+					for($i = $index; $i >= $limit; $i -= $step * 2)
 					{
 						yield $i;
 					}
-				};	
+				};
 			}
 			// decrease
-			else 
+			else
 			{
-				$Generator = function() use ($start, $end, $step) 
+				$Generator = function() use ($index, $limit, $step)
 				{
-					for($i = $start; $i <= $end; $i += $step * 2)
+					for($i = $index; $i <= $limit; $i += $step * 2)
 					{
 						yield $i;
 					}
@@ -271,40 +270,40 @@ class Integer {
 	*	getRange(5, 1); // 5,4,3,2,1
 	*	getRange(10, 3, 3); // 10,7,4
 	*
-	*	@param int|null $start
-	*	@param int|null $end
+	*	@param int|null $index
+	*	@param int|null $limit
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
 	*/
-	public function getRange($start = null, $end = null, $step = 1)
+	public function getRange($index = null, $limit = null, $step = 1)
 	{
 		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$start, $end] );
+		$this->throwExceptionIfAllNulls( [$index, $limit] );
 		$this->throwExceptionIfInvalidStep($step);
 
 		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$start, $end] );
+		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
 
 		// infinite increase range
-		if(is_int($start) && is_null($end)) 
+		if(is_int($index) && is_null($limit))
 		{
-			$Generator = function() use ($start, $step) 
+			$Generator = function() use ($index, $step)
 			{
-				for($i = $start; true; $i += $step)
+				for($i = $index; true; $i += $step)
 				{
 					yield $i;
 				}
 			};
 		}
 		// infinite decrease range
-		elseif(is_int($end) && is_null($start)) 
+		elseif(is_int($limit) && is_null($index))
 		{
-			$Generator =  function() use ($end, $step)
+			$Generator =  function() use ($limit, $step)
 			{
-				for($i = $end; true; $i -= $step)
+				for($i = $limit; true; $i -= $step)
 				{
-					yield $i;		
+					yield $i;
 				}
 			};
 		}
@@ -312,26 +311,26 @@ class Integer {
 		else 
 		{
 			// decrease
-			if($start >= $end)
+			if($index >= $limit)
 			{
-				$Generator = function() use ($start, $end, $step) 	
+				$Generator = function() use ($index, $limit, $step)
 				{
-					for($i = $start; $i >= $end; $i -= $step)
+					for($i = $index; $i >= $limit; $i -= $step)
 					{
 						yield $i;
 					}
 				};
 			}
-			else 
+			else
 			// increase
 			{
-				$Generator = function() use ($start, $end, $step) 
+				$Generator = function() use ($index, $limit, $step)
 				{
-					for($i = $start; $i <= $end; $i += $step)
+					for($i = $index; $i <= $limit; $i += $step)
 					{
 						yield $i;
 					}
-				};	
+				};
 			}
 		}
 
@@ -339,35 +338,51 @@ class Integer {
 	}
 
 
-	public function getFibonacci($increasing = true, $end = null, $step = 1)
+	/**
+	*	Returns a generator with Fibonacci sequence
+	*
+	*	getFibonacci(); // 0,1,1,2,3,5 ...
+	*	getFibonacci(false); // 0,-1,-1,-3 ...
+	*	getFibonacci(true, null, 2); // 0,1,3 ...
+	*	getFibonacci(true, 4); // 0,1,1,2,3
+	*	getFibonacci(false, -5); // 0,-1,-1,-2,-3,-5
+	*
+	*	@param bool $increasing
+	*	@param null|int $limit
+	*	@param int
+	*	@throws InvalidArgumentException|LogicException
+	*	@return Generator
+	*/
+	public function getFibonacci($increasing = true, $limit = null, $step = 1)
 	{
 		if(is_bool($increasing) === false)
 		{
-			throw new \InvalidArgumentException('First argument must be a boolean, given ' . gettype($increasing) . '.');
+			throw new \InvalidArgumentException('First argument must be a boolean, given '
+												. gettype($increasing) . '.');
 		}
 
 		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$end] );
+		$this->throwExceptionIfNotNullOrInt( [$limit] );
 
 		// if infinite sequence... 
-		if( is_null($end) === false )
+		if( is_null($limit) === false )
 		{
-			if($increasing === false && $end >= 0)
+			if($increasing === false && $limit >= 0)
 			{
 				throw new \LogicException('Second argument must be lower then 0 in a infinite increasing sequence.');
 			}
-			elseif($increasing === true && $end <= 0)
+			elseif($increasing === true && $limit <= 0)
 			{
 				throw new \LogicException('Second argument must be lower then 0 in a infinite decreasing sequence.');
 			}
-		} 
+		}
 
 		// Throws LogicException
 		$this->throwExceptionIfInvalidStep($step);
 
 		$fib = 0;
 		// infinite increase
-		if($increasing === true && is_null($end))
+		if($increasing === true && is_null($limit))
 		{
 			$Generator = function() use ($fib, $step)
 			{
@@ -386,7 +401,7 @@ class Integer {
 			};
 		}
 		// infinite decrease range
-		elseif($increasing === false && is_null($end))
+		elseif($increasing === false && is_null($limit))
 		{
 			$Generator = function() use ($fib, $step)
 			{
@@ -410,11 +425,11 @@ class Integer {
 			// increasing
 			if($increasing === true)
 			{
-				$Generator = function() use ($fib, $end, $step)
+				$Generator = function() use ($fib, $limit, $step)
 				{
 					$x = 0;
 					$y = 1;
-					while($fib < $end)
+					while($fib < $limit)
 					{
 						yield $fib;
 						// add up for next iteration and take messure for steps
@@ -422,18 +437,18 @@ class Integer {
 						{
 							$x = $y;
 							$y = $fib;
-						}		
+						}
 					}
 				};
 			}
 			// decreasing
 			else
 			{
-				$Generator = function() use ($fib, $end, $step)
+				$Generator = function() use ($fib, $limit, $step)
 				{
 					$x = 0;
 					$y = -1;
-					while($fib > $end)
+					while($fib > $limit)
 					{
 						yield $fib;
 						// add up for next iteration and take messure for steps
@@ -441,11 +456,69 @@ class Integer {
 						{
 							$x = $y;
 							$y = $fib;
-						}		
+						}
 					}
 				};
 			}
 		}
+
+		return $Generator();
+	}
+
+
+	/**
+	*	Returns a prime generator
+	*	
+	*	The prime generator narrows the result if limit is not a prime
+	*	getPrime(0,20) // 2 .. 19
+	*	getPrime(100) // returns all primes after 100 (or including 100 if it was a prime)
+	*
+	*	@param $index
+	*	@param $limit
+	*	@throws InvalidArgumentException|LogicException
+	*	@return Generator
+	*/
+	public function getPrime($index, $limit = null) 
+	{
+		// throws InvalidArgumentException
+		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
+
+		if( $index < 0)
+		{
+			throw new \LogicException('The range is too low. Index must at least be 0.');
+		}
+
+		if( $limit <= $index )
+		{
+			throw new \LogicException('The limit must be larger then the index.');
+		}
+
+		// narrowing
+		if($index < 2)
+		{
+			$index = 2;
+		}
+
+		// specific range generator
+		$Generator = function() use ($index, $limit) 
+		{
+			if($index === 2)
+			{
+				yield $index;
+				++$yield;
+			}
+
+			// test only odd
+			for(; $index <= $limit; $index += 2)
+			{
+
+				if( $index % 2 === 0)
+				{
+					continue;
+				}
+				break;
+			}
+		};
 
 		return $Generator();
 	}
