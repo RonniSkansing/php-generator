@@ -498,25 +498,33 @@ class Integer {
 		{
 			$index = 2;
 		}
-
-		// specific range generator
+		// limited range generator
 		$Generator = function() use ($index, $limit) 
 		{
 			if($index === 2)
 			{
 				yield $index;
-				++$yield;
+				++$index;
 			}
 
-			// test only odd
+			// check against odd numbers
 			for(; $index <= $limit; $index += 2)
 			{
-
 				if( $index % 2 === 0)
 				{
 					continue;
 				}
-				break;
+
+				// assert against all previous numbers
+				for($i = floor(sqrt($index)); $index > $i; ++$i)
+				{
+					if( $index % $i === 0)
+					{
+						continue 2;
+					}
+				}
+
+				yield $index;
 			}
 		};
 

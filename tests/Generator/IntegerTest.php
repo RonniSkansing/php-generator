@@ -496,7 +496,7 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testGetPrimeThrowsExceptionIfIndexHigherOrEqualThenEnd()
+	public function testGetPrimeThrowsExceptionIfIndexHigherOrEqualThenLimit()
 	{
 		$Generator = $this->Integer->getPrime(10,1);
 	}
@@ -509,9 +509,13 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetPrimeHighstPrimeNarrows()
 	{
-		$Generator = $this->Integer->getPrime(50, 100);
-		foreach($Generator as $prime){}
-		$this->assertEquals(97, $Generator->current());
+		$Generator = $this->Integer->getPrime(0, 100);
+		foreach($Generator as $prime)
+		{
+			$last_prime = $prime;
+		}
+
+		$this->assertEquals($last_prime, $last_prime);
 	}
 
 
