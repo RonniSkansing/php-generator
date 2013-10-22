@@ -9,9 +9,4 @@ foreach($PrimeGen as $prime)
 	echo 'Prime : ' . $prime . PHP_EOL;
 }
 */
-$inf = INF;
-$big_float = PHP_INT_MAX + PHP_INT_MAX;
-if( PHP_INT_MAX * PHP_INT_MAX < INF)
-{
-	echo PHP_INT_MAX * PHP_INT_MAX;
-}
+var_dump( -1 * 1);

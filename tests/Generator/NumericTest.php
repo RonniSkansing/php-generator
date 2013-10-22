@@ -63,9 +63,11 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	{
 		$Generator = $this->Numeric->getEven(null, 10);
 		foreach($Generator as $int) 
+		{
 			if($int === -32)
-				break;
-
+				break;	
+		}
+		
 		$this->assertEquals(-32, $int);	
 	}
 
@@ -80,20 +82,20 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 			if($int === -18)
 				break;
 		}
-
 		$this->assertEquals($result[7], $int);		
 	}
 
 
-	public function testGetEvenGeneratesEncrease() 
+	public function testGetEvenGeneratesEncreaseInRange() 
 	{
 		$Generator = $this->Numeric->getEven(10,20);
 		foreach($Generator as $int) {}
+
 		$this->assertEquals(20, $int);
 	}
 
 
-	public function testGetEvenCanDecrease()
+	public function testGetEvenCanDecreaseInRange()
 	{
 		$Generator = $this->Numeric->getEven(20,10);
 		foreach($Generator as $int) {}
@@ -274,7 +276,7 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 				break;
 		}
 
-		$this->assertEquals($result[8], $int);		
+		$this->assertEquals($result[4], $int);		
 	}
 
 	public function testGetRangeGeneratesEncrease() 
@@ -306,8 +308,9 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 		{
 			$result[] = $int;
 		}
+
 		$this->assertEquals($result[0], 21);
-		$this->assertEquals($result[1], 18);
+		$this->assertEquals($result[1], 15);
 	}
 
 	/**
@@ -505,6 +508,11 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	{
 		$Generator = $this->Numeric->getPrime(0,10);
 		$this->assertEquals(2, $Generator->current());
+	}
+
+	public function testGetPrimeNextPrimeIsOnlyCheckOddNumbers()
+	{
+		// fill in
 	}
 
 	public function testGetPrimeHighstPrimeNarrows()

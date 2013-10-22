@@ -14,21 +14,32 @@ class Numeric {
 	*/
 	protected function createRangeGenerator($index, $limit, $step)
 	{
+
 		$incrementing = ($step > 0);
+		// if the range is limited, swap vars.
+		if( $incrementing === false && is_infinite($limit) === false)
+		{
+			$temp = $limit;
+			$limit = $index;
+			$index = $temp;
+		}
+		
 		$Generator = function() use($index, $limit, $step, $incrementing) 
 		{
-            for ($i = $index; true; $i += 2 * $step) 
+            for ($i = $index; true; $i += 2 * $step)
             {
-                if (( $incrementing === true && $i <= $limit) || ($incrementing === false && $i >= $limit)) 
+                if (( $incrementing === true && $i <= $limit) || ($incrementing === false && $i >= $limit))
                 {
                     yield $i;
                 }
-                else 
+                else
                 {
-                    break;
+                	break;
                 }
             }
         };
+
+        return $Generator();
 	}
 
 
@@ -144,60 +155,30 @@ class Numeric {
 			// throw LogicException
 			$this->throwExceptionIfodd($index);
 
-			$Generator = function() use ($index, $step)
-			{
-				for($i = $index; true; $i += $step * 2)
-				{
-					yield $i;
-				}
-			};
+			return $this->createRangeGenerator($limit, INF, $step);
 		}
 		// infinite decrease range
-		elseif(is_int($limit) && is_null($index))
+		if(is_int($limit) && is_null($index))
 		{
 			// throws LogicException
+
 			$this->throwExceptionIfodd($limit);
 
-			$Generator =  function() use ($limit, $step)
-			{
-				for($i = $limit; true; $i -= $step * 2)
-				{
-					yield $i;
-				}
-			};
+			return $this->createRangeGenerator($limit, -INF, -1 * $step);
 		}
-		// predetermined range
-		else 
+		
+		// throws LogicException
+		$this->throwExceptionIfodd($index);
+		$this->throwExceptionIfodd($limit);
+
+		// decrease
+		if($index >= $limit)
 		{
-			// throws LogicException
-			$this->throwExceptionIfodd($index);
-			$this->throwExceptionIfodd($limit);
-
-			// decrease
-			if($index >= $limit)
-			{
-				$Generator = function() use ($index, $limit, $step)
-				{
-					for($i = $index; $i >= $limit; $i -= $step * 2)
-					{
-						yield $i;
-					}
-				};
-			}
-			// increase
-			else
-			{
-				$Generator = function() use ($index, $limit, $step)
-				{
-					for($i = $index; $i <= $limit; $i += $step * 2)
-					{
-						yield $i;
-					}
-				};
-			}
+			return $this->createRangeGenerator($limit, $index, -1 * $step);
 		}
 
-		return $Generator();
+		// increase
+		return $this->createRangeGenerator($index, $limit, $step);
 	}
 
 
@@ -232,60 +213,30 @@ class Numeric {
 			// throw LogicException
 			$this->throwExceptionIfEven($index);
 
-			$Generator = function() use ($index, $step)
-			{
-				for($i = $index; true; $i += $step * 2)
-				{
-					yield $i;
-				}
-			};
+			return $this->createRangeGenerator($index, INF, $step);
 		}
 		// infinite decrease range
-		elseif(is_int($limit) && is_null($index)) 
+		if(is_int($limit) && is_null($index)) 
 		{
 			// throws LogicException
 			$this->throwExceptionIfEven($limit);
 
-			$Generator =  function() use ($limit, $step)
-			{
-				for($i = $limit; true; $i -= $step * 2)
-				{
-					yield $i;
-				}
-			};
+			return $this->createRangeGenerator($limit, -INF, -1 * $step);
 		}
 		// predetermined range
-		else 
-		{
-			// throws LogicException
-			$this->throwExceptionIfEven($index);
-			$this->throwExceptionIfEven($limit);
+		
+		// throws LogicException
+		$this->throwExceptionIfEven($index);
+		$this->throwExceptionIfEven($limit);
 
-			// increase
-			if($index >= $limit)
-			{
-				$Generator = function() use ($index, $limit, $step)
-				{
-					for($i = $index; $i >= $limit; $i -= $step * 2)
-					{
-						yield $i;
-					}
-				};
-			}
-			// decrease
-			else
-			{
-				$Generator = function() use ($index, $limit, $step)
-				{
-					for($i = $index; $i <= $limit; $i += $step * 2)
-					{
-						yield $i;
-					}
-				};
-			}
+		// decrease
+		if($index >= $limit)
+		{
+			return $this->createRangeGenerator($limit, $index, -1 * $step);
 		}
 
-		return $Generator();
+		// increase
+		return $this->createRangeGenerator($index, $limit, $step);
 	}
 
 
@@ -317,53 +268,24 @@ class Numeric {
 		// infinite increase range
 		if(is_int($index) && is_null($limit))
 		{
-			$Generator = function() use ($index, $step)
-			{
-				for($i = $index; true; $i += $step)
-				{
-					yield $i;
-				}
-			};
+			return $this->createRangeGenerator($index, INF, $step);
 		}
 		// infinite decrease range
-		elseif(is_int($limit) && is_null($index))
+		if(is_int($limit) && is_null($index))
 		{
-			$Generator =  function() use ($limit, $step)
-			{
-				for($i = $limit; true; $i -= $step)
-				{
-					yield $i;
-				}
-			};
+			return $this->createRangeGenerator($limit, -INF, -1 * $step);
 		}
 		// predetermined range
-		else 
+		
+		// decrease
+		if($index >= $limit)
 		{
-			// decrease
-			if($index >= $limit)
-			{
-				$Generator = function() use ($index, $limit, $step)
-				{
-					for($i = $index; $i >= $limit; $i -= $step)
-					{
-						yield $i;
-					}
-				};
-			}
-			else
-			// increase
-			{
-				$Generator = function() use ($index, $limit, $step)
-				{
-					for($i = $index; $i <= $limit; $i += $step)
-					{
-						yield $i;
-					}
-				};
-			}
+			return $this->createRangeGenerator($limit, $index, -1 * $step);
 		}
 
-		return $Generator();
+		// increase
+		return $this->createRangeGenerator($index, $limit, $step);
+		
 	}
 
 
