@@ -228,22 +228,12 @@ class Numeric {
 		// Throws InvalidArgumentException
 		$this->throwExceptionIfNotNullOrInt( [$limit] );
 
-		// if infinite sequence... throw exception if limit is a non logic value
-		if( is_null($limit) === false )
-		{
-			if($increasing === false && $limit >= 0)
-			{
-				throw new \LogicException('Second argument must be lower then 0 in a infinite increasing sequence.');
-			}
-			elseif($increasing === true && $limit <= 0)
-			{
-				throw new \LogicException('Second argument must be lower then 0 in a infinite decreasing sequence.');
-			}
-		}
-
 		// Throws LogicException
 		$this->throwExceptionIfInvalidStep($step);
 
+		// Throws LogicException
+		$this->throwExceptionIfInvalidInfiniteLimit($increasing, $limit);
+		
 		// infinite increase
 		if($increasing === true && is_null($limit))
 		{
@@ -359,11 +349,6 @@ class Numeric {
 			// check against odd numbers
 			for(; $index <= $limit; $index += 2)
 			{
-				if( $index % 2 === 0)
-				{
-					continue;
-				}
-
 				// assert against all previous numbers
 				for($i = floor(sqrt($index)); $index > $i; ++$i)
 				{
