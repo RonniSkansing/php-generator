@@ -60,7 +60,6 @@ class Numeric {
 		$Generator = function() use ($incrementing, $index, $limit, $step)
 		{
 			$fib = $x = 0;
-
 			while(true)
 			{
 				if( 	( $incrementing === false && $fib < $limit )
@@ -105,7 +104,7 @@ class Numeric {
 
 		$Generator = function() use($index, $limit, $step, $incrementing) 
 		{
-			for ($i = $index; true; $i += 2 * $step)
+			for ($i = $index; true; $i += $step)
 			{
 				if (( $incrementing === true && $i <= $limit) || ($incrementing === false && $i >= $limit))
 				{
@@ -158,7 +157,6 @@ class Numeric {
 				// assert against all previous numbers
 				for($i = floor(sqrt($index)); $index > $i; ++$i)
 				{
-					//var_dump (' ' . $index . ' ');
 					if( $index % $i === 0)
 					{
 						continue 2;

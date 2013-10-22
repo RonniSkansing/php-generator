@@ -59,22 +59,29 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	public function testGetRangeCanDecreaseInfiniteInSteps()
 	{
 		$Generator = $this->Numeric->getRange(null, 11, 2);
-		$result = [];
+		$rannge = [];
 		foreach($Generator as $int) 
 		{
-			$result[] = $int;
-			if($int === -5)
+			if($int <= 2)
+			{
 				break;
+			}
+			$range[] = $int;
 		}
 
-		$this->assertEquals($result[4], $int);		
+		$expected = [11,9,7,5,3];
+		$this->assertEquals($expected, $range);		
 	}
 
 	public function testGetRangeGeneratesEncrease() 
 	{
 		$Generator = $this->Numeric->getRange(11,21);
-		foreach($Generator as $int) {}
-		$this->assertEquals(21, $int);
+		$range = [];
+		foreach($Generator as $int) {
+			$range[] = $int;
+		}
+		$expected = [11,12,13,14,15,16,17,18,19,20,21];
+		$this->assertEquals($expected, $range);
 	}
 
 	public function testGetRangeCanDecrease()
@@ -101,7 +108,7 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 		}
 
 		$this->assertEquals($result[0], 21);
-		$this->assertEquals($result[1], 15);
+		$this->assertEquals($result[1], 18);
 	}
 
 	/**
