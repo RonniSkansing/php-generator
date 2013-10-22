@@ -276,39 +276,39 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	/**
 	*	@expectedException InvalidArgumentException
 	*/
-	public function testGetPrimeThrowsExceptionIfArgsNotIntOrNull() {
-		$Generator = $this->Numeric->getPrime('string', 'string');
+	public function testgetPrimesThrowsExceptionIfArgsNotIntOrNull() {
+		$Generator = $this->Numeric->getPrimes('string', 'string');
 	}
 
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testGetPrimeThrowsExceptionIfIndexLowerThen0() {
-		$Generator = $this->Numeric->getPrime(-1);
+	public function testgetPrimesThrowsExceptionIfIndexLowerThen0() {
+		$Generator = $this->Numeric->getPrimes(-1);
 	}
 
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testGetPrimeThrowsExceptionIfIndexHigherOrEqualThenLimit()
+	public function testgetPrimesThrowsExceptionIfIndexHigherOrEqualThenLimit()
 	{
-		$Generator = $this->Numeric->getPrime(10,1);
+		$Generator = $this->Numeric->getPrimes(10,1);
 	}
 
-	public function testGetPrimeNextPrimeIs2IfLowerThen2()
+	public function testgetPrimesNextPrimeIs2IfLowerThen2()
 	{
-		$Generator = $this->Numeric->getPrime(0,10);
+		$Generator = $this->Numeric->getPrimes(0,10);
 		$this->assertEquals(2, $Generator->current());
 	}
 
-	public function testGetPrimeNextPrimeIsOnlyCheckOddNumbers()
+	public function testgetPrimesNextPrimeIsOnlyCheckOddNumbers()
 	{
 		// fill in
 	}
 
-	public function testGetPrimeHighstPrimeNarrows()
+	public function testgetPrimesHighstPrimeNarrows()
 	{
-		$Generator = $this->Numeric->getPrime(0, 100);
+		$Generator = $this->Numeric->getPrimes(0, 100);
 		foreach($Generator as $prime)
 		{
 			$last_prime = $prime;

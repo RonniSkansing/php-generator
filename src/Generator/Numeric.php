@@ -4,18 +4,50 @@ namespace Generator;
 
 class Numeric {
 
+
 	/**
-	*	Create a generator within specific length.
+	*	Returns a fibbo generator
+	*
+	*	@param $index
+	*	@param $limit
+	*	@param $step
+	*	@return \Generator 
+	*/
+	protected function createFibboGenerator($incrementing, $limit, $step)
+	{
+
+		$index = ($incrementing) ? 1 : -1;
+		$Generator = function() use ($incrementing, $index, $limit, $step)
+		{
+			$fib = $x = 0;
+
+			while(true)
+			{
+				yield $fib;
+				// add up for next iteration and take messure for steps
+				for($j = 0; $j < $step; ++$j, $fib = ($x + $index))
+				{
+					$x = $index;
+					$index = $fib;
+				}
+			}
+		};
+
+		return $Generator();
+	}
+
+	/**
+	*	Returns a generator within specific length.
 	*
 	* 	@param $index
 	* 	@param $limit
 	*	@param $step
-	*	@return Generator
+	*	@return \Generator
 	*/
 	protected function createRangeGenerator($index, $limit, $step)
 	{
-
 		$incrementing = ($step > 0);
+
 		// if the range is limited, swap vars.
 		if( $incrementing === false && is_infinite($limit) === false)
 		{
@@ -41,7 +73,7 @@ class Numeric {
 
         return $Generator();
 	}
-	
+
 
 	/**
 	*	Throws Exception if all elements are null
@@ -53,6 +85,7 @@ class Numeric {
 	{
  		$types = array_map("gettype", $values);
  		$unique_types = array_unique($types);
+
  		if( count( $unique_types) === 1 && $unique_types[0] === "NULL")
  		{
  			throw new \LogicException('All values are null');
@@ -107,7 +140,7 @@ class Numeric {
 	*	@param int|null $limit
 	*	@param int $step
 	*	@throws InvalidArgumentException|LogicException
-	*	@return Generator
+	*	@return \Generator
 	*/
 	public function getRange($index = null, $limit = null, $step = 1)
 	{
@@ -155,7 +188,7 @@ class Numeric {
 	*	@param null|int $limit
 	*	@param int
 	*	@throws InvalidArgumentException|LogicException
-	*	@return Generator
+	*	@return \Generator
 	*/
 	public function getFibonacci($increasing = true, $limit = null, $step = 1)
 	{
@@ -168,7 +201,7 @@ class Numeric {
 		// Throws InvalidArgumentException
 		$this->throwExceptionIfNotNullOrInt( [$limit] );
 
-		// if infinite sequence... 
+		// if infinite sequence... throw exception if limit is a non logic value
 		if( is_null($limit) === false )
 		{
 			if($increasing === false && $limit >= 0)
@@ -185,33 +218,27 @@ class Numeric {
 		$this->throwExceptionIfInvalidStep($step);
 
 		$fib = 0;
+
 		// infinite increase
 		if($increasing === true && is_null($limit))
 		{
-			$Generator = function() use ($fib, $step)
-			{
-				$x = 0;
-				$y = 1;
-				while(true)
-				{
-					yield $fib;
-					// add up for next iteration and take messure for steps
-					for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
-					{
-						$x = $y;
-						$y = $fib;
-					}
-				}
-			};
+			return $this->createFibboGenerator(true, INF, $step);
 		}
+
 		// infinite decrease range
-		elseif($increasing === false && is_null($limit))
+		if($increasing === false && is_null($limit))
 		{
-			$Generator = function() use ($fib, $step)
+			return $this->createFibboGenerator(false, -INF, $step);
+		}
+
+		// increasing
+		if($increasing === false)
+		{
+			$Generator = function() use ($fib, $limit, $step)
 			{
 				$x = 0;
 				$y = -1;
-				while(true)
+				while($fib > $limit)
 				{
 					yield $fib;
 					// add up for next iteration and take messure for steps
@@ -223,47 +250,25 @@ class Numeric {
 				}
 			};
 		}
-		// specific end of sequence 
+		// decreasing
 		else
 		{
-			// increasing
-			if($increasing === true)
+			$Generator = function() use ($fib, $limit, $step)
 			{
-				$Generator = function() use ($fib, $limit, $step)
+				$x = 0;
+				$y = 1;
+				while($fib < $limit)
 				{
-					$x = 0;
-					$y = 1;
-					while($fib < $limit)
+					yield $fib;
+					// add up for next iteration and take messure for steps
+					for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
 					{
-						yield $fib;
-						// add up for next iteration and take messure for steps
-						for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
-						{
-							$x = $y;
-							$y = $fib;
-						}
+						$x = $y;
+						$y = $fib;
 					}
-				};
-			}
-			// decreasing
-			else
-			{
-				$Generator = function() use ($fib, $limit, $step)
-				{
-					$x = 0;
-					$y = -1;
-					while($fib > $limit)
-					{
-						yield $fib;
-						// add up for next iteration and take messure for steps
-						for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
-						{
-							$x = $y;
-							$y = $fib;
-						}
-					}
-				};
-			}
+				}
+			};
+			
 		}
 
 		return $Generator();
@@ -280,7 +285,7 @@ class Numeric {
 	*	@param $index
 	*	@param $limit
 	*	@throws InvalidArgumentException|LogicException
-	*	@return Generator
+	*	@return \Generator
 	*/
 	public function getPrimes($index, $limit = null) 
 	{
