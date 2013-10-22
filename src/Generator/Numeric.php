@@ -6,7 +6,7 @@ class Numeric {
 
 
 	/**
-	*	Returns a fibbo generator
+	*	Returns a infinite fibbo generator
 	*
 	*	@param $index
 	*	@param $limit
@@ -28,7 +28,7 @@ class Numeric {
 				// calculate the fibbo seq.
 				for($j = 0; true; ++$j, $fib = ($x + $index))
 				{
-					if( is_infinite($limit) === true && $j < $step )
+					if( is_infinite($limit) === true && $j > $step )
 					{
 						$x = $index;
 						$index = $fib;	
@@ -63,22 +63,19 @@ class Numeric {
 
 			while(true)
 			{
-				if( 	( $incrementing === false && $fib > $limit )
-					|| 	( $incrementing === true && $fib < $limit ) )
-				{
-
-					yield $fib;
-
-					// add up for next iteration and take messure for steps
-					for($j = 0; $j < $step; ++$j, $fib = ($x + $index))
-					{
-						$x = $index;
-						$index = $fib;		
-					}
-				}
-				else
+				if( 	( $incrementing === false && $fib < $limit )
+					|| 	( $incrementing === true && $fib > $limit ) )
 				{
 					break;
+				}
+
+				yield $fib;
+
+				// add up for next iteration and take messure for steps
+				for($j = 0; $j < $step; ++$j, $fib = ($x + $index))
+				{
+					$x = $index;
+					$index = $fib;		
 				}
 			}
 		};
@@ -137,7 +134,7 @@ class Numeric {
 	*	@return void
 	*/
 	public function throwExceptionIfInvalidInfiniteLimit($increasing, $limit) {
-		if( is_null($limit) === false )
+		if(is_null($limit) === false)
 		{
 			if($increasing === false && $limit >= 0)
 			{
