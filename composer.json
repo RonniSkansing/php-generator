@@ -1,7 +1,7 @@
 {
     "name": "ronnieskansing/generators",
     "description": "Package of php generators (as of php 5.5) for common tasks.",
-    "keywords": ["even","uneven","primes", "fibonacci", "generators", "generator"],
+    "keywords": ["range","primes", "fibonacci", "generators", "generator"],
     "homepage": "https://github.com/RonnieSkansing/php-generators",
     "license": "DBAD",
     "authors": [
