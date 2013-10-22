@@ -109,6 +109,12 @@ class Numeric {
 	}
 
 
+	protected function isValidRangeArgs()
+	{
+
+	}
+
+
 	/**
 	*	Throws LogicException if step is over 1
 	*
@@ -122,123 +128,6 @@ class Numeric {
 			throw new \LogicException('The step must be 1 or higher');
 		}
 	}
-
-
-	/**
-	*	Returns a Generator with a even range.
-	*
-	*	getEven(10); // 10,12,14,16,18,20,22 ...
-	*	getEven(null, 10); // 10,8,6,4,2,0,-2,-4 ...
-	*	getEven(10, null, 2); // 10,6,2, -2 ...
-	*	getEven(10,20); // 10,12,14,16,18,20
-	*	getEven(20,10); // 20,18,16,14,12,10
-	*	getEven(10,20,2); // 10,14,18
-	*
-	*	@param int|null $index
-	*	@param int|null $limit
-	*	@param int $step
-	*	@throws InvalidArgumentException|LogicException
-	*	@return Generator
-	*/
-	public function getEven( $index = null, $limit = null, $step = 1 )
-	{
-		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$index, $limit] );
-		$this->throwExceptionIfInvalidStep($step);
-
-		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
-
-		// infinite increase range
-		if(is_int($index) && is_null($limit))
-		{
-			// throw LogicException
-			$this->throwExceptionIfodd($index);
-
-			return $this->createRangeGenerator($limit, INF, $step);
-		}
-		// infinite decrease range
-		if(is_int($limit) && is_null($index))
-		{
-			// throws LogicException
-
-			$this->throwExceptionIfodd($limit);
-
-			return $this->createRangeGenerator($limit, -INF, -1 * $step);
-		}
-		
-		// throws LogicException
-		$this->throwExceptionIfodd($index);
-		$this->throwExceptionIfodd($limit);
-
-		// decrease
-		if($index >= $limit)
-		{
-			return $this->createRangeGenerator($limit, $index, -1 * $step);
-		}
-
-		// increase
-		return $this->createRangeGenerator($index, $limit, $step);
-	}
-
-
-	/**
-	*	Returns a Generator with a odd range.
-	*
-	*	getOdd(11); // 11,13,15,17 ...
-	*	getOdd(null, 11); // 11,9,7,5,3 ...
-	*	getOdd(11, null, 2); // 11,7,3, -1 ...
-	*	getOdd(11,21); // 11,13,15,17,19,21
-	*	getOdd(21,11); // 21,19,18,17,15,13,11
-	*	getOdd(11,21,2); // 11,15,19
-	*
-	*	@param int|null $index
-	*	@param int|null $limit
-	*	@param int $step
-	*	@throws InvalidArgumentException|LogicException
-	*	@return Generator
-	*/
-	public function getOdd( $index = null, $limit = null, $step = 1 )
-	{
-		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$index, $limit] );
-		$this->throwExceptionIfInvalidStep($step);
-
-		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
-
-		// infinite increase range
-		if(is_int($index) && is_null($limit))
-		{
-			// throw LogicException
-			$this->throwExceptionIfEven($index);
-
-			return $this->createRangeGenerator($index, INF, $step);
-		}
-		// infinite decrease range
-		if(is_int($limit) && is_null($index)) 
-		{
-			// throws LogicException
-			$this->throwExceptionIfEven($limit);
-
-			return $this->createRangeGenerator($limit, -INF, -1 * $step);
-		}
-		// predetermined range
-		
-		// throws LogicException
-		$this->throwExceptionIfEven($index);
-		$this->throwExceptionIfEven($limit);
-
-		// decrease
-		if($index >= $limit)
-		{
-			return $this->createRangeGenerator($limit, $index, -1 * $step);
-		}
-
-		// increase
-		return $this->createRangeGenerator($index, $limit, $step);
-	}
-
 
 	/**
 	*	Returns a generator with selected range
