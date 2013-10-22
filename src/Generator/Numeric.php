@@ -86,8 +86,8 @@ class Numeric {
 	/**
 	*	Returns a generator within specific length.
 	*
-	* 	@param $index
-	* 	@param $limit
+	*	@param $index
+	*	@param $limit
 	*	@param $step
 	*	@return \Generator
 	*/
@@ -102,23 +102,23 @@ class Numeric {
 			$limit = $index;
 			$index = $temp;
 		}
-		
+
 		$Generator = function() use($index, $limit, $step, $incrementing) 
 		{
-            for ($i = $index; true; $i += 2 * $step)
-            {
-                if (( $incrementing === true && $i <= $limit) || ($incrementing === false && $i >= $limit))
-                {
-                    yield $i;
-                }
-                else
-                {
-                	break;
-                }
-            }
-        };
+			for ($i = $index; true; $i += 2 * $step)
+			{
+				if (( $incrementing === true && $i <= $limit) || ($incrementing === false && $i >= $limit))
+				{
+					yield $i;
+				}
+				else
+				{
+					break;
+				}
+			}
+		};
 
-        return $Generator();
+		return $Generator();
 	}
 
 
@@ -174,7 +174,7 @@ class Numeric {
 		
 
 	/** 
-	* 	Throws Exception if infinite and has invalid limit
+	*	Throws Exception if infinite and has invalid limit
 	*
 	*	Throws exception If limit is not null, and increasing while limit set to 0 or less.
 	*	Throws exception if limit is not null, and decreasing while limit set to 0 or more.
@@ -245,12 +245,12 @@ class Numeric {
 	{
 		if($step < 1)
 		{
-			throw new \LogicException('The step must be 1 or higher');
+			throw new \LogicException('The step must be 1 or higher.');
 		}
 	}
 
 
-		/**
+	/**
 	*	Returns a generator with Fibonacci sequence
 	*
 	*	getFibonacci(); // 0,1,1,2,3,5 ...
@@ -269,8 +269,7 @@ class Numeric {
 	{
 		if(is_bool($increasing) === false)
 		{
-			throw new \InvalidArgumentException('First argument must be a boolean, given '
-												. gettype($increasing) . '.');
+			throw new \InvalidArgumentException('First argument must be a boolean, given ' . gettype($increasing) . '.');
 		}
 
 		// Throws InvalidArgumentException
