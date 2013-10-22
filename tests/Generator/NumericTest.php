@@ -279,37 +279,32 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 	/**
 	*	@expectedException InvalidArgumentException
 	*/
-	public function testgetPrimesThrowsExceptionIfArgsNotIntOrNull() {
+	public function testGetPrimesThrowsExceptionIfArgsNotIntOrNull() {
 		$Generator = $this->Numeric->getPrimes('string', 'string');
 	}
 
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testgetPrimesThrowsExceptionIfIndexLowerThen0() {
+	public function testGetPrimesThrowsExceptionIfIndexLowerThen0() {
 		$Generator = $this->Numeric->getPrimes(-1);
 	}
 
 	/**
 	*	@expectedException LogicException
 	*/
-	public function testgetPrimesThrowsExceptionIfIndexHigherOrEqualThenLimit()
+	public function testGetPrimesThrowsExceptionIfIndexHigherOrEqualThenLimit()
 	{
 		$Generator = $this->Numeric->getPrimes(10,1);
 	}
 
-	public function testgetPrimesNextPrimeIs2IfLowerThen2()
+	public function testGetPrimesNextPrimeIs2IfLowerThen2()
 	{
 		$Generator = $this->Numeric->getPrimes(0,10);
 		$this->assertEquals(2, $Generator->current());
 	}
 
-	public function testgetPrimesNextPrimeIsOnlyCheckOddNumbers()
-	{
-		// fill in
-	}
-
-	public function testgetPrimesHighstPrimeNarrows()
+	public function testGetPrimesHighstPrimeNarrows()
 	{
 		$Generator = $this->Numeric->getPrimes(0, 100);
 		foreach($Generator as $prime)
@@ -320,5 +315,49 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($last_prime, $last_prime);
 	}
 
+	public function testGetPrimesCanCreateNarrowRange() 
+	{
+		$Generator = $this->Numeric->getPrimes(4, 20);
+		$primes = [];
+		foreach($Generator as $prime)
+		{
+			$primes[] = $prime;
+		}
 
+		$this->assertEquals([5, 7, 11, 13, 17, 19], $primes);
+	}
+
+	public function testGetPrimesWithNoArgsIsInfinite()
+	{
+		$Generator = $this->Numeric->getPrimes();
+		$primes = [];
+		foreach($Generator as $prime)
+		{
+			if($prime > 20)
+			{
+				break;
+			}
+
+			$primes[] = $prime;
+		}
+
+		$this->assertEquals([2, 3, 5, 7, 11, 13, 17, 19], $primes);
+	}
+
+	public function testGetPrimesWithInfiniteWithIndexOtherHigherThen2()
+	{
+		$Generator = $this->Numeric->getPrimes(3);
+		$primes = [];
+		foreach($Generator as $prime)
+		{
+			if($prime > 20)
+			{
+				break;
+			}
+
+			$primes[] = $prime;
+		}
+
+		$this->assertEquals([3, 5, 7, 11, 13, 17, 19], $primes);	
+	}
 }

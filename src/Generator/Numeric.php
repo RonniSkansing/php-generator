@@ -28,7 +28,7 @@ class Numeric {
 				// calculate the fibbo seq.
 				for($j = 0; true; ++$j, $fib = ($x + $index))
 				{
-					if( is_infinite($limit) === true && $j > $step )
+					if( is_infinite($limit) === true && $j < $step )
 					{
 						$x = $index;
 						$index = $fib;	
@@ -121,6 +121,57 @@ class Numeric {
         return $Generator();
 	}
 
+
+	/**
+	*	Returns a prime generator
+	*
+	*	@param int index
+	*	@param int|null $limit
+	*	@return void
+	*/
+	public function createPrimeGenerator($index, $limit) 
+	{
+		// limited range generator
+		$Generator = function() use ($index, $limit) 
+		{
+			if($index === 2)
+			{
+				yield $index;
+				++$index;
+			}
+
+			if($index === 3)
+			{
+				yield $index;
+				++$index;
+			}
+
+			// if even, add 1.
+			if($index % 2 === 0)
+			{
+				++$index;
+			}
+			
+			// check against odd numbers
+			for(; is_null($limit) === true || $index <= $limit; $index += 2)
+			{
+				// assert against all previous numbers
+				for($i = floor(sqrt($index)); $index > $i; ++$i)
+				{
+					//var_dump (' ' . $index . ' ');
+					if( $index % $i === 0)
+					{
+						continue 2;
+					}
+				}
+
+				yield $index;
+			}
+		};
+
+		return $Generator();
+	}
+		
 
 	/** 
 	* 	Throws Exception if infinite and has invalid limit
@@ -314,7 +365,7 @@ class Numeric {
 	*	@throws InvalidArgumentException|LogicException
 	*	@return \Generator
 	*/
-	public function getPrimes($index, $limit = null) 
+	public function getPrimes($index = 2, $limit = null) 
 	{
 		// throws InvalidArgumentException
 		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
@@ -324,41 +375,17 @@ class Numeric {
 			throw new \LogicException('The range is too low. Index must at least be 0.');
 		}
 
-		if( $limit <= $index )
+		if( is_null($limit) === false && $limit <= $index )
 		{
 			throw new \LogicException('The limit must be larger then the index.');
 		}
 
 		// narrowing
-		if($index < 2)
+		if(is_null($limit) === false && $index < 2)
 		{
 			$index = 2;
 		}
-		// limited range generator
-		$Generator = function() use ($index, $limit) 
-		{
-			if($index === 2)
-			{
-				yield $index;
-				++$index;
-			}
 
-			// check against odd numbers
-			for(; $index <= $limit; $index += 2)
-			{
-				// assert against all previous numbers
-				for($i = floor(sqrt($index)); $index > $i; ++$i)
-				{
-					if( $index % $i === 0)
-					{
-						continue 2;
-					}
-				}
-
-				yield $index;
-			}
-		};
-
-		return $Generator();
+		return $this->createPrimeGenerator($index, $limit);
 	}
 }
