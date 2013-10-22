@@ -206,13 +206,14 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 			$result[] = $fib;
 		}
 		$fibbo = [-0,-1,-3,-8,-21];
-		$this->assertEquals($fibbo, $result);	
+		$this->assertEquals($fibbo, $result);
 	}
 
 	public function testGetFibonacciCanMakeALimitedIncreasingSequence()
 	{
 		$Generator = $this->Numeric->getFibonacci(true, 10);
 		$result = [];
+
 		foreach($Generator as $fib)
 		{
 			if($fib > 21) 
@@ -221,8 +222,9 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 			}
 			$result[] = $fib;
 		}
+
 		$fibbo = [0,1,1,2,3,5,8];
-		$this->assertEquals($fibbo, $result);	
+		$this->assertEquals($fibbo, $result);
 	}
 
 	public function testGetFibonacciCanMakeALimitedIncreasingSequenceWithStep()
@@ -238,10 +240,10 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 			$result[] = $fib;
 		}
 		$fibbo = [0,1,3,8];
-		$this->assertEquals($fibbo, $result);	
+		$this->assertEquals($fibbo, $result);
 	}
 
-	public function testGetFibonacciCanMakeALimitedDelimitedSequence()
+	public function testGetFibonacciCanMakeALimitedDecreasingSequence()
 	{
 		$Generator = $this->Numeric->getFibonacci(false, -10);
 		$result = [];
@@ -253,8 +255,9 @@ class NumericGeneratorTest extends PHPUnit_Framework_TestCase {
 			}
 			$result[] = $fib;
 		}
+
 		$fibbo = [-0,-1,-1,-2,-3,-5,-8];
-		$this->assertEquals($fibbo, $result);	
+		$this->assertEquals($fibbo, $result);
 	}
 
 	public function testGetFibonacciCanMakeALimitedDelimitedSequenceWithStep()

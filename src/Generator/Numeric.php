@@ -15,8 +15,8 @@ class Numeric {
 	*/
 	protected function createFibboGenerator($incrementing, $limit, $step)
 	{
-
 		$index = ($incrementing) ? 1 : -1;
+
 		$Generator = function() use ($incrementing, $index, $limit, $step)
 		{
 			$fib = $x = 0;
@@ -24,11 +24,61 @@ class Numeric {
 			while(true)
 			{
 				yield $fib;
-				// add up for next iteration and take messure for steps
-				for($j = 0; $j < $step; ++$j, $fib = ($x + $index))
+				
+				// calculate the fibbo seq.
+				for($j = 0; true; ++$j, $fib = ($x + $index))
 				{
-					$x = $index;
-					$index = $fib;
+					if( is_infinite($limit) === true && $j < $step )
+					{
+						$x = $index;
+						$index = $fib;	
+					}
+					else 
+					{
+						break;
+					}
+					
+				}
+			}
+		};
+
+		return $Generator();
+	}
+
+	/**
+	*	Returns a limited fibbo generator
+	*
+	*	@param $index
+	*	@param $limit
+	*	@param $step
+	*	@return \Generator 
+	*/
+	protected function createLimitedFibboGenerator($incrementing, $limit, $step)
+	{
+		$index = ($incrementing) ? 1 : -1;
+
+		$Generator = function() use ($incrementing, $index, $limit, $step)
+		{
+			$fib = $x = 0;
+
+			while(true)
+			{
+				if( 	( $incrementing === false && $fib > $limit )
+					|| 	( $incrementing === true && $fib < $limit ) )
+				{
+
+					yield $fib;
+
+					// add up for next iteration and take messure for steps
+					for($j = 0; $j < $step; ++$j, $fib = ($x + $index))
+					{
+						$x = $index;
+						$index = $fib;		
+					}
+				}
+				else
+				{
+					break;
 				}
 			}
 		};
@@ -72,6 +122,32 @@ class Numeric {
         };
 
         return $Generator();
+	}
+
+
+	/** 
+	* 	Throws Exception if infinite and has invalid limit
+	*
+	*	Throws exception If limit is not null, and increasing while limit set to 0 or less.
+	*	Throws exception if limit is not null, and decreasing while limit set to 0 or more.
+	*
+	*	@param $increasing bool
+	*	@param $limited int|null
+	*	@throws \LogicException
+	*	@return void
+	*/
+	public function throwExceptionIfInvalidInfiniteLimit($increasing, $limit) {
+		if( is_null($limit) === false )
+		{
+			if($increasing === false && $limit >= 0)
+			{
+				throw new \LogicException('Second argument must be lower then 0 in a infinite increasing sequence.');
+			}
+			elseif($increasing === true && $limit <= 0)
+			{
+				throw new \LogicException('Second argument must be lower then 0 in a infinite decreasing sequence.');
+			}
+		}
 	}
 
 
@@ -126,56 +202,7 @@ class Numeric {
 	}
 
 
-	/**
-	*	Returns a generator with selected range
-	*
-	*	getRange(1); // 1,2,3,4,5 ...
-	*	getRange(null, 1); // 1,-1,-2,-3 ...
-	*	getRange(10, null, 3); // 10,13,16,19 ...
-	*	getRange(1, 5); // 1,2,3,4,5
-	*	getRange(5, 1); // 5,4,3,2,1
-	*	getRange(10, 3, 3); // 10,7,4
-	*
-	*	@param int|null $index
-	*	@param int|null $limit
-	*	@param int $step
-	*	@throws InvalidArgumentException|LogicException
-	*	@return \Generator
-	*/
-	public function getRange($index = null, $limit = null, $step = 1)
-	{
-		// Throws LogicException
-		$this->throwExceptionIfAllNulls( [$index, $limit] );
-		$this->throwExceptionIfInvalidStep($step);
-
-		// Throws InvalidArgumentException
-		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
-
-		// infinite increase range
-		if(is_int($index) && is_null($limit))
-		{
-			return $this->createRangeGenerator($index, INF, $step);
-		}
-		// infinite decrease range
-		if(is_int($limit) && is_null($index))
-		{
-			return $this->createRangeGenerator($limit, -INF, -1 * $step);
-		}
-		// predetermined range
-		
-		// decrease
-		if($index >= $limit)
-		{
-			return $this->createRangeGenerator($limit, $index, -1 * $step);
-		}
-
-		// increase
-		return $this->createRangeGenerator($index, $limit, $step);
-		
-	}
-
-
-	/**
+		/**
 	*	Returns a generator with Fibonacci sequence
 	*
 	*	getFibonacci(); // 0,1,1,2,3,5 ...
@@ -217,8 +244,6 @@ class Numeric {
 		// Throws LogicException
 		$this->throwExceptionIfInvalidStep($step);
 
-		$fib = 0;
-
 		// infinite increase
 		if($increasing === true && is_null($limit))
 		{
@@ -231,47 +256,62 @@ class Numeric {
 			return $this->createFibboGenerator(false, -INF, $step);
 		}
 
-		// increasing
+		// decreasing 
 		if($increasing === false)
 		{
-			$Generator = function() use ($fib, $limit, $step)
-			{
-				$x = 0;
-				$y = -1;
-				while($fib > $limit)
-				{
-					yield $fib;
-					// add up for next iteration and take messure for steps
-					for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
-					{
-						$x = $y;
-						$y = $fib;
-					}
-				}
-			};
-		}
-		// decreasing
-		else
-		{
-			$Generator = function() use ($fib, $limit, $step)
-			{
-				$x = 0;
-				$y = 1;
-				while($fib < $limit)
-				{
-					yield $fib;
-					// add up for next iteration and take messure for steps
-					for($j = 0; $j < $step; ++$j, $fib = ($x + $y))
-					{
-						$x = $y;
-						$y = $fib;
-					}
-				}
-			};
-			
+			return $this->createLimitedFibboGenerator(false, $limit, $step);
 		}
 
-		return $Generator();
+		// increasing
+		return $this->createLimitedFibboGenerator(true, $limit, $step);
+	}
+
+
+	/**
+	*	Returns a generator with selected range
+	*
+	*	getRange(1); // 1,2,3,4,5 ...
+	*	getRange(null, 1); // 1,-1,-2,-3 ...
+	*	getRange(10, null, 3); // 10,13,16,19 ...
+	*	getRange(1, 5); // 1,2,3,4,5
+	*	getRange(5, 1); // 5,4,3,2,1
+	*	getRange(10, 3, 3); // 10,7,4
+	*
+	*	@param int|null $index
+	*	@param int|null $limit
+	*	@param int $step
+	*	@throws InvalidArgumentException|LogicException
+	*	@return \Generator
+	*/
+	public function getRange($index = null, $limit = null, $step = 1)
+	{
+		// Throws LogicException
+		$this->throwExceptionIfAllNulls( [$index, $limit] );
+		$this->throwExceptionIfInvalidStep($step);
+
+		// Throws InvalidArgumentException
+		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
+
+		// infinite increase range
+		if(is_int($index) && is_null($limit))
+		{
+			return $this->createRangeGenerator($index, INF, $step);
+		}
+		// infinite decrease range
+		if(is_int($limit) && is_null($index))
+		{
+			return $this->createRangeGenerator($limit, -INF, -1 * $step);
+		}
+
+		// predetermined range
+		// decrease
+		if($index >= $limit)
+		{
+			return $this->createRangeGenerator($limit, $index, -1 * $step);
+		}
+
+		// increase
+		return $this->createRangeGenerator($index, $limit, $step);		
 	}
 
 
