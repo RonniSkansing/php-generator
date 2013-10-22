@@ -41,9 +41,7 @@ class Numeric {
 
         return $Generator();
 	}
-
-
-
+	
 
 	/**
 	*	Throws Exception if all elements are null
@@ -276,15 +274,15 @@ class Numeric {
 	*	Returns a prime generator
 	*	
 	*	The prime generator narrows the result if limit is not a prime
-	*	getPrime(0,20) // 2 .. 19
-	*	getPrime(100) // returns all primes after 100 (or including 100 if it was a prime)
+	*	getPrimes(0,20) // 2 .. 19
+	*	getPrimes(100) // returns all primes after 100 (or including 100 if it was a prime)
 	*
 	*	@param $index
 	*	@param $limit
 	*	@throws InvalidArgumentException|LogicException
 	*	@return Generator
 	*/
-	public function getPrime($index, $limit = null) 
+	public function getPrimes($index, $limit = null) 
 	{
 		// throws InvalidArgumentException
 		$this->throwExceptionIfNotNullOrInt( [$index, $limit] );
