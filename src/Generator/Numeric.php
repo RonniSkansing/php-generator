@@ -63,35 +63,6 @@ class Numeric {
 
 
 	/**
-	*	Throws Exception if odd int.
-	*
-	*	@param int $int
-	*	@throws LogicException
-	*/
-	protected function throwExceptionIfodd($int)
-	{
-		if($int % 2 !== 0)		
-		{
-			throw new \LogicException('Not a even number.');
-		}
-	}
-
-
-	/**
-	*	Throws Exception if even int.
-	*
-	*	@param int $int
-	*	@throws LogicException
-	*/
-	protected function throwExceptionIfEven($int)
-	{
-		if($int % 2 !== 1)
-		{
-			throw new \LogicException('Not a odd number.');
-		}
-	}
-
-	/**
 	*	Throws Exception if all elements passed is not integer or null
 	*
 	*	@param array $values
@@ -109,12 +80,6 @@ class Numeric {
 	}
 
 
-	protected function isValidRangeArgs()
-	{
-
-	}
-
-
 	/**
 	*	Throws LogicException if step is over 1
 	*
@@ -128,6 +93,7 @@ class Numeric {
 			throw new \LogicException('The step must be 1 or higher');
 		}
 	}
+
 
 	/**
 	*	Returns a generator with selected range
