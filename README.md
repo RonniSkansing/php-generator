@@ -20,7 +20,7 @@ Install via composer, remember to include the autoload or do it your own way ;)
 `
 {
     "require": {
-        "ronnieskansing/cards": "dev-master"
+        "ronnieskansing/generators": "dev-master"
     }
 }
 `
